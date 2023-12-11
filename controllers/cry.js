@@ -13,7 +13,7 @@ const create = async (req, res) => {
 const index = async (req, res) => {
   try {
     const cries = await Cry.find({})
-    res.status(201).json(cries)
+    res.status(200).json(cries)
   } catch (error) {
     console.log(error);
     res.status(500).json(error)
@@ -27,6 +27,11 @@ const update = async (req, res) => {
       req.body,
       { new: true }
     )
+
+    if (!cry) {
+      return res.status(404).json({ error: "Resource not found" })
+    }
+  
     res.status(200).json(cry)
   } catch (error) {
     console.log(error);
@@ -36,7 +41,12 @@ const update = async (req, res) => {
 
 const deleteCry = async (req, res) => {
   try {
-    await Cry.findByIdAndDelete(req.params.id)
+    const deletedCry = await Cry.findByIdAndDelete(req.params.id)
+
+    if (!deletedCry) {
+      return res.status(404).json({ error: "Resource not found" })
+    }
+
     res.status(204).end()
   } catch (error) {
     console.log(error);
