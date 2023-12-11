@@ -1,11 +1,21 @@
-const express = require('express')
-const app = express()
-portNum = 3000
+// npm modules
+import 'dotenv/config.js'
+import express from 'express'
 
-app.use('/', (req, res) => {
-  res.send('Hello World!')
-})
+// database
+import './config/database.js'
+
+// routes
+import { router as cryRouter } from './routes/cry.js'
+
+const app = express()
+const portNum = 3001
+
+app.use(express.json())
+
+// mount routes
+app.use('/api/cries', cryRouter)
 
 app.listen(portNum, () => {
-  console.log(`Listening on port ${portNum}.`);
+  console.log(`Listening on port ${portNum}`);
 })
