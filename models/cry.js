@@ -4,6 +4,10 @@ const Schema = mongoose.Schema
 
 const crySchema = new Schema({
   name: String,
+  cryFile: {
+    data: Buffer,
+    contentType: String,
+  },
   cryUrl: String,
 }, {
   timestamps: true,

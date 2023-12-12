@@ -1,8 +1,26 @@
+// models
 import { Cry } from "../models/cry.js";
+
+const baseURL = process.env.API_BASE_URL
 
 const create = async (req, res) => {
   try {
-    const cry = await Cry.create(req.body)
+    const { name } = req.body
+    const cryFile = req.file
+
+    if (!name || !cryFile) {
+      return res.status(400).json({ error: 'Name and file are required fields' })
+    }
+
+    const cry = await Cry.create({
+      name: name,
+      cryFile: {
+        data: cryFile.buffer,
+        contentType: cryFile.mimetype
+      },
+      cryUrl: `${baseURL}/api/cry/${cryFile.filename}`,
+    })
+
     res.status(201).json(cry)
   } catch (error) {
     console.log(error);
