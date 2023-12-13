@@ -13,5 +13,6 @@ router.post('/', uploadFile, cryCtrl.create)
 router.get('/', cryCtrl.index)
 router.put('/:id', uploadFile, cryCtrl.update)
 router.delete('/:id', cryCtrl.delete)
+router.get('/:name', cryCtrl.show)
 
 export { router }
