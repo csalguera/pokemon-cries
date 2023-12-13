@@ -1,6 +1,7 @@
 // npm modules
 import 'dotenv/config.js'
 import express from 'express'
+import cors from 'cors'
 
 // database
 import './config/database.js'
@@ -11,6 +12,7 @@ import { router as cryRouter } from './routes/cry.js'
 const app = express()
 const portNum = 3001
 
+app.use(cors())
 app.use(express.json())
 
 // mount routes
