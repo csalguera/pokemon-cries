@@ -13,7 +13,7 @@ const create = async (req, res) => {
     res.status(201).json(cry)
   } catch (error) {
     console.log(error);
-    res.status(500).json(error)
+    res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
@@ -23,7 +23,7 @@ const index = async (req, res) => {
     res.status(200).json(cries)
   } catch (error) {
     console.log(error);
-    res.status(500).json(error)
+    res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
@@ -42,7 +42,7 @@ const update = async (req, res) => {
     res.status(200).json(cry)
   } catch (error) {
     console.log(error);
-    res.status(500).json(error)
+    res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
@@ -57,7 +57,7 @@ const deleteCry = async (req, res) => {
     res.status(204).end()
   } catch (error) {
     console.log(error);
-    res.status(500).json(error)
+    res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
