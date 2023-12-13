@@ -34,7 +34,10 @@ const update = async (req, res) => {
   try {
     const cry = await Cry.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      {
+        name: req.body.name,
+        url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`,
+      },
       { new: true }
     )
 
