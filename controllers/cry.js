@@ -1,26 +1,15 @@
 // models
 import { Cry } from "../models/cry.js";
 
-const baseURL = process.env.API_BASE_URL
+// middleware
+import { bucket, region, s3 } from "../middleware/middleware.js";
 
 const create = async (req, res) => {
   try {
-    const { name } = req.body
-    const cryFile = req.file
-
-    if (!name || !cryFile) {
-      return res.status(400).json({ error: 'Name and file are required fields' })
-    }
-
     const cry = await Cry.create({
-      name: name,
-      cryFile: {
-        data: cryFile.buffer,
-        contentType: cryFile.mimetype
-      },
-      cryUrl: `${baseURL}/api/cry/${cryFile.filename}`,
+      name: req.body.name,
+      url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`
     })
-
     res.status(201).json(cry)
   } catch (error) {
     console.log(error);

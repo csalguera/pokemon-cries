@@ -4,11 +4,7 @@ const Schema = mongoose.Schema
 
 const crySchema = new Schema({
   name: String,
-  cryFile: {
-    data: Buffer,
-    contentType: String,
-  },
-  cryUrl: String,
+  url: String,
 }, {
   timestamps: true,
 })
