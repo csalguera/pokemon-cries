@@ -1,3 +1,5 @@
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+
 // models
 import { Cry } from "../models/cry.js";
 
@@ -54,6 +56,17 @@ const deleteCry = async (req, res) => {
       return res.status(404).json({ error: "Resource not found" })
     }
 
+    const key = deletedCry.url.replace(`https://${bucket}.s3.${region}.amazonaws.com/`, '')
+
+    try {
+      await s3.send(new DeleteObjectCommand({
+        Bucket: bucket,
+        Key: key
+      }))
+    } catch (error) {
+      console.log(error);
+      res.status(404).json({ error: 'File not found' })
+    }
     res.status(204).end()
   } catch (error) {
     console.log(error);
