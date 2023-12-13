@@ -1,5 +1,10 @@
+// npm modules
 import { Router } from "express";
+
+// controllers
 import * as cryCtrl from "../controllers/cry.js";
+
+// middleware
 import { uploadFile } from "../middleware/middleware.js";
 
 const router = Router()

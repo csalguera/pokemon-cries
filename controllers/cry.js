@@ -1,3 +1,4 @@
+// npm modules
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 // models
@@ -10,7 +11,7 @@ const create = async (req, res) => {
   try {
     const cry = await Cry.create({
       name: req.body.name,
-      url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`
+      url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`,
     })
     res.status(201).json(cry)
   } catch (error) {
