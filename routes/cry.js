@@ -11,7 +11,7 @@ const router = Router()
 
 router.post('/', uploadFile, cryCtrl.create)
 router.get('/', cryCtrl.index)
-router.put('/:id', cryCtrl.update)
+router.put('/:id', uploadFile, cryCtrl.update)
 router.delete('/:id', cryCtrl.delete)
 
 export { router }

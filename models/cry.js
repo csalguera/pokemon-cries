@@ -6,6 +6,8 @@ const Schema = mongoose.Schema
 const crySchema = new Schema({
   name: String,
   url: String,
+  currentKey: String,
+  previousKey: String,
 }, {
   timestamps: true,
 })

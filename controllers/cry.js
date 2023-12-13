@@ -12,43 +12,60 @@ const create = async (req, res) => {
     const cry = await Cry.create({
       name: req.body.name,
       url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`,
+      currentKey: req.file.key,
+      previousKey: req.file.key,
     })
-    res.status(201).json(cry)
+    return res.status(201).json(cry)
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' })
+    return res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
 const index = async (req, res) => {
   try {
     const cries = await Cry.find({})
-    res.status(200).json(cries)
+    return res.status(200).json(cries)
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' })
+    return res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
 const update = async (req, res) => {
   try {
-    const cry = await Cry.findByIdAndUpdate(
+    const oldCry = await Cry.findById(req.params.id)
+    const newCry = await Cry.findByIdAndUpdate(
       req.params.id,
       {
         name: req.body.name,
         url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`,
+        currentKey: req.file.key,
+        previousKey: oldCry.currentKey,
       },
       { new: true }
     )
 
-    if (!cry) {
+    if (!newCry) {
       return res.status(404).json({ error: "Resource not found" })
     }
-  
-    res.status(200).json(cry)
+
+    if (newCry.currentKey !== newCry.previousKey) {
+      try {
+        await s3.send(new DeleteObjectCommand({
+          Bucket: bucket,
+          Key: newCry.previousKey,
+        }))
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Internal Server Error' })
+      }
+    }
+
+    return res.status(200).json(newCry)
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' })
+    return res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
@@ -65,16 +82,16 @@ const deleteCry = async (req, res) => {
     try {
       await s3.send(new DeleteObjectCommand({
         Bucket: bucket,
-        Key: key
+        Key: key,
       }))
     } catch (error) {
       console.log(error);
-      res.status(404).json({ error: 'File not found' })
+      return res.status(404).json({ error: 'File not found' })
     }
-    res.status(204).end()
+    return res.status(204).end()
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' })
+    return res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
