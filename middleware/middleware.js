@@ -41,7 +41,7 @@ const uploadFile = (req, res, next) => {
     })
   } catch (error) {
     console.log(error);
-    res.status({ error: 'Internal Server Error' })
+    res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 
