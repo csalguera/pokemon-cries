@@ -97,7 +97,7 @@ const deleteCry = async (req, res) => {
 
 const show = async (req, res) => {
   try {
-    const cry = await Cry.findOne( {name: req.params.name })
+    const cry = await Cry.findOne({ name: req.params.name })
     return res.status(200).json(cry)
   } catch (error) {
     console.log(error);
