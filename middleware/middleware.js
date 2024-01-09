@@ -25,7 +25,7 @@ const upload = multer({
     s3,
     acl: 'public-read',
     key: (req, file, cb) => {
-      cb(null, file.originalname)
+      cb(null, `generation-${req.body.generation}/${file.originalname}`)
     }
   })
 })

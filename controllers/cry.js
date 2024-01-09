@@ -14,6 +14,7 @@ const create = async (req, res) => {
       url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`,
       currentKey: req.file.key,
       previousKey: req.file.key,
+      generation: parseInt(req.body.generation, 10),
     })
     return res.status(201).json(cry)
   } catch (error) {
@@ -42,6 +43,7 @@ const update = async (req, res) => {
         url: `https://${bucket}.s3.${region}.amazonaws.com/${req.file.key}`,
         currentKey: req.file.key,
         previousKey: oldCry.currentKey,
+        generation: parseInt(req.body.generation, 10),
       },
       { new: true }
     )

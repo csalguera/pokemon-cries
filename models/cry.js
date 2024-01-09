@@ -8,6 +8,7 @@ const crySchema = new Schema({
   url: String,
   currentKey: String,
   previousKey: String,
+  generation: Number,
 }, {
   timestamps: true,
 })
