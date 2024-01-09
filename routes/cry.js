@@ -14,5 +14,6 @@ router.get('/', cryCtrl.index)
 router.put('/:id', uploadFile, cryCtrl.update)
 router.delete('/:id', cryCtrl.delete)
 router.get('/:name', cryCtrl.show)
+router.get('/generation/:gen', cryCtrl.filter)
 
 export { router }

@@ -107,10 +107,21 @@ const show = async (req, res) => {
   }
 }
 
+const filter = async (req, res) => {
+  try {
+    const cries = await Cry.find({ generation: req.params.gen })
+    return res.status(200).json(cries)
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 export {
   index,
   create,
   update,
   deleteCry as delete,
   show,
+  filter,
 }
