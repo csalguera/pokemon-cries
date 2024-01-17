@@ -65,7 +65,7 @@ const changePassword = async (req, res) => {
   }
 }
 
-const handleAuthError = (error, res) => {
+function handleAuthError (error, res) {
   console.log(error);
   const { message } = error
   if (message === 'User not found' || message === 'Incorrect Password') {
@@ -75,8 +75,8 @@ const handleAuthError = (error, res) => {
   }
 }
 
-const createJWT = (user) => {
-  return jwt.sign({ user }), process.env.SECRET, { expiresIn: '24h' }
+function createJWT(user) {
+  return jwt.sign({ user }, process.env.SECRET, { expiresIn: '24h' })
 }
 
 export {
