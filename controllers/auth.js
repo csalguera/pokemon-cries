@@ -29,3 +29,20 @@ const signup = async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 }
+
+const login = async (req, res) => {
+  try {
+    if (!process.env.SECRET) throw new Error('no SECRET in back-end .env')
+
+    const user = await User.findOne({ email: req.body.email })
+    if (!user) throw new Error('User not found')
+
+    const isMatch = await user.comparePassword(req.body.passowrd)
+    if (!isMatch) throw new Error('Incorrect Password')
+
+    const token = createJWT(user)
+    res.status(200).json({ token })
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
