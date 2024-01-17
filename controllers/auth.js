@@ -76,10 +76,7 @@ function handleAuthError (error, res) {
   const errorMessages = [
     'User not found',
     'Incorrect Password',
-    'User is already Admin',
-    'User is not an Admin',
-    'User did not apply for Admin',
-    'Application pending',
+    'Authorization denied',
   ]
 
   if (errorMessages.includes(message)) {

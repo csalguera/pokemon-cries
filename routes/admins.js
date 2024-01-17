@@ -16,5 +16,6 @@ router.get('/', checkForAdmin, adminsCtrl.index)
 router.get('/applications', checkForAdmin, adminsCtrl.filter)
 router.post('/confirm/:id', checkForAdmin, adminsCtrl.confirm)
 router.post('/deny/:id', checkForAdmin, adminsCtrl.deny)
+router.post('/demote/:id', checkForAdmin, adminsCtrl.demote)
 
 export { router }

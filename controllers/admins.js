@@ -8,8 +8,8 @@ const apply = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
     if (!user) throw new Error('User not found')
-    if (user.isAdmin) throw new Error('User is already Admin')
-    if (user.hasAdminApplication) throw new Error('Application pending')
+    if (user.isAdmin) throw new Error('Authorization denied')
+    if (user.hasAdminApplication) throw new Error('Authorization denied')
 
     user.hasAdminApplication = true
     await user.save()
@@ -57,8 +57,8 @@ const confirm = async (req, res) => {
   try {
     const newAdmin = await User.findById(req.params.id)
     if (!newAdmin) throw new Error('User not found')
-    if (newAdmin.isAdmin) throw new Error('User is already Admin')
-    if (!newAdmin.hasAdminApplication) throw new Error('User did not apply for Admin')
+    if (newAdmin.isAdmin) throw new Error('Authorization denied')
+    if (!newAdmin.hasAdminApplication) throw new Error('Authorization denied')
   
     newAdmin.hasAdminApplication = false
     newAdmin.isAdmin = true
@@ -86,7 +86,7 @@ const deny = async (req, res) => {
     const user = await User.findById(req.params.id)
     if (!user) throw new Error('User not found')
     if (user.isAdmin) throw new Error('Authorization denied')
-    if (!user.hasAdminApplication) throw new Error('User did not apply for Admin')
+    if (!user.hasAdminApplication) throw new Error('Authorization denied')
 
     user.hasAdminApplication = false
     user.isAdmin = false
@@ -109,10 +109,38 @@ const deny = async (req, res) => {
   }
 }
 
+const demote = async (req, res) => {
+  try {
+    const admin = await User.findById(req.params.id)
+    if (!admin) throw new Error('User not found')
+    if (!admin.isAdmin) throw new Error('Authorization denied')
+    if (admin.email === process.env.EMAIL) throw new Error('Authorization denied')
+
+    admin.isAdmin = false
+    await admin.save()
+
+    const response = {
+      message: 'Admin privileges removed',
+      user: {
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        isAdmin: admin.isAdmin,
+        hasAdminApplication: admin.hasAdminApplication,
+      },
+    }
+
+    res.status(200).json(response)
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
+
 export {
   apply,
   index,
   filter,
   confirm,
   deny,
+  demote,
 }
