@@ -5,7 +5,7 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { Cry } from "../models/cry.js";
 
 // middleware
-import { bucket, region, s3 } from "../middleware/middleware.js";
+import { bucket, region, s3 } from "../middleware/aws-multer.js";
 
 const create = async (req, res) => {
   try {
@@ -110,7 +110,11 @@ const show = async (req, res) => {
 const filter = async (req, res) => {
   try {
     const cries = await Cry.find({ generation: req.params.gen })
-    return res.status(200).json(cries)
+    if (cries.length) {
+      return res.status(200).json(cries)
+    } else {
+      return res.status(200).json({ msg: 'No resources found' })
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: 'Internal Server Error' })

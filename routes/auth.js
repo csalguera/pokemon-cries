@@ -1,5 +1,10 @@
+// npm modules
 import { Router } from "express";
+
+// middleware
 import { decodeUserFromToken, checkAuth } from "../middleware/auth.js";
+
+// controllers
 import * as authCtrl from '../controllers/auth.js'
 
 const router = Router()
