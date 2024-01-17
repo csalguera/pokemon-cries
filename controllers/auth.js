@@ -1,0 +1,31 @@
+import { Jwt } from "jsonwebtoken";
+
+import { User } from "../models/user.js";
+import { Profile } from "../models/profile.js";
+
+const signup = async (req, res) => {
+  try {
+    if (!process.env.SECRET) throw new Error('no SECRET in back-end .env')
+
+    const user = await User.findOne({ email: req.body.email })
+    if (user) throw new Error('Account already exists')
+
+    const newProfile = await Profile.create(req.body)
+    req.body.profile = newProfile._id
+    const newUser = await User.create(req.body)
+
+    const token = createJWT(newUser)
+    res.status(200).json({ token })
+  } catch (error) {
+    console.log(error);
+    try {
+      if (req.body.profile) {
+        await Profile.findByIdAndDelete(req.body.profile)
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message })
+    }
+    res.status(500).json({ error: error.message })
+  }
+}
