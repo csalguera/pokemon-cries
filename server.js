@@ -10,6 +10,7 @@ import './config/database.js'
 // routes
 import { router as criesRouter } from './routes/cries.js'
 import { router as authRouter } from './routes/auth.js'
+import { router as adminsRouter } from './routes/admins.js'
 import { router as profilesRouter } from './routes/profiles.js'
 
 const app = express()
@@ -22,6 +23,7 @@ app.use(express.json())
 // mount routes
 app.use('/api/cries', criesRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/admins', adminsRouter)
 app.use('/api/profiles', profilesRouter)
 
 export { app }

@@ -68,63 +68,7 @@ const changePassword = async (req, res) => {
   }
 }
 
-const apply = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id)
-    if (!user) throw new Error('User not found')
-    if (user.isAdmin) throw new Error('User is already Admin')
-
-    user.hasAdminApplication = true
-    await user.save()
-
-    const token = createJWT(user)
-    res.status(200).json({ token })
-  } catch (error) {
-    handleAuthError(error, res)
-  }
-}
-
-const indexApplications = async (req, res) => {
-  try {
-    const users = await User.find({ hasAdminApplication: true })
-    if (users.length) {
-      res.status(200).json(users)
-    } else {
-      res.status(200).json({ msg: 'No applications found' })
-    }
-  } catch (error) {
-    handleAuthError(error, res)
-  }
-}
-
-const confirmApplication = async (req, res) => {
-  try {
-    const newAdmin = await User.findById(req.params.id)
-    if (!newAdmin) throw new Error('User not found')
-    if (newAdmin.isAdmin) throw new Error('User is already Admin')
-    if (!newAdmin.hasAdminApplication) throw new Error('User did not apply for Admin')
-  
-    newAdmin.hasAdminApplication = false
-    newAdmin.isAdmin = true
-    await newAdmin.save()
-
-    const response = {
-      message: 'Admin privileges granted successfully',
-      user: {
-        _id: newAdmin._id,
-        name: newAdmin.name,
-        email: newAdmin.email,
-        isAdmin: newAdmin.isAdmin,
-        hasAdminApplication: newAdmin.hasAdminApplication,
-      },
-    }
-
-    res.status(200).json(response)
-  } catch (error) {
-    handleAuthError(error, res)
-  }
-}
-
+// helper functions
 function handleAuthError (error, res) {
   console.log(error);
   const { message } = error
@@ -135,6 +79,7 @@ function handleAuthError (error, res) {
     'User is already Admin',
     'User is not an Admin',
     'User did not apply for Admin',
+    'Application pending',
   ]
 
   if (errorMessages.includes(message)) {
@@ -152,7 +97,5 @@ export {
   signup,
   login,
   changePassword,
-  apply,
-  indexApplications,
-  confirmApplication,
+  handleAuthError,
 }
