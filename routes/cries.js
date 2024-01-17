@@ -5,7 +5,7 @@ import { Router } from "express";
 import * as cryCtrl from "../controllers/cries.js";
 
 // middleware
-import { uploadFile } from "../middleware/middleware.js";
+import { uploadFile } from "../middleware/aws-multer.js";
 import { decodeUserFromToken, checkForAdmin } from "../middleware/auth.js";
 
 const router = Router()

@@ -5,7 +5,7 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { Cry } from "../models/cry.js";
 
 // middleware
-import { bucket, region, s3 } from "../middleware/middleware.js";
+import { bucket, region, s3 } from "../middleware/aws-multer.js";
 
 const create = async (req, res) => {
   try {
