@@ -12,6 +12,7 @@ const signup = async (req, res) => {
 
     const newProfile = await Profile.create(req.body)
     req.body.profile = newProfile._id
+    req.body.isAdmin = req.body.email === process.env.EMAIL ? true : false
     const newUser = await User.create(req.body)
 
     const token = createJWT(newUser)
@@ -65,7 +66,7 @@ const changePassword = async (req, res) => {
   }
 }
 
-const adminApplication = async (req, res) => {
+const apply = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
     if (!user) throw new Error('User not found')
@@ -81,10 +82,56 @@ const adminApplication = async (req, res) => {
   }
 }
 
+const indexApplications = async (req, res) => {
+  try {
+    const users = await User.find({ hasAdminApplication: true })
+    res.status(200).json(users)
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
+
+const confirmApplication = async (req, res) => {
+  try {
+    const newAdmin = await User.findById(req.params.id)
+    if (!newAdmin) throw new Error('User not found')
+    if (newAdmin.isAdmin) throw new Error('User is already Admin')
+    if (!newAdmin.hasAdminApplication) throw new Error('User did not apply for Admin')
+  
+    newAdmin.hasAdminApplication = false
+    newAdmin.isAdmin = true
+    await newAdmin.save()
+
+    const response = {
+      message: 'Admin privileges granted successfully',
+      user: {
+        _id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email,
+        isAdmin: newAdmin.isAdmin,
+        hasAdminApplication: newAdmin.hasAdminApplication,
+      },
+    }
+
+    res.status(200).json(response)
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
+
 function handleAuthError (error, res) {
   console.log(error);
   const { message } = error
-  if (message === 'User not found' || message === 'Incorrect Password' || message === 'User is already Admin') {
+
+  const errorMessages = [
+    'User not found',
+    'Incorrect Password',
+    'User is already Admin',
+    'User is not an Admin',
+    'User did not apply for Admin',
+  ]
+
+  if (errorMessages.includes(message)) {
     res.status(401).json({ error: message })
   } else {
     res.status(500).json({ error: message })
@@ -99,5 +146,7 @@ export {
   signup,
   login,
   changePassword,
-  adminApplication,
+  apply,
+  indexApplications,
+  confirmApplication,
 }

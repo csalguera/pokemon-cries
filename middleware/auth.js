@@ -19,4 +19,8 @@ const checkAuth = (req, res, next) => {
   return req.user ? next() : res.status(401).json({ error: 'Not Authorized' })
 }
 
-export { decodeUserFromToken, checkAuth }
+const checkForAdmin = (req, res, next) => {
+  return req.user.isAdmin ? next() : res.status(401).json({ error: 'Not Authorized' })
+}
+
+export { decodeUserFromToken, checkAuth, checkForAdmin }
