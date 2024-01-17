@@ -37,7 +37,7 @@ const login = async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
     if (!user) throw new Error('User not found')
 
-    const isMatch = await user.comparePassword(req.body.passowrd)
+    const isMatch = await user.comparePassword(req.body.password)
     if (!isMatch) throw new Error('Incorrect Password')
 
     const token = createJWT(user)
@@ -52,7 +52,7 @@ const changePassword = async (req, res) => {
     const user = await User.findById(req.user._id)
     if (!user) throw new Error('User not found')
 
-    const isMatch = user.comparePassword(req.body.passowrd)
+    const isMatch = user.comparePassword(req.body.password)
     if (!isMatch) throw new Error('Incorrect Password')
 
     user.password = req.body.newPassword
@@ -65,10 +65,26 @@ const changePassword = async (req, res) => {
   }
 }
 
+const adminApplication = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+    if (!user) throw new Error('User not found')
+    if (user.isAdmin) throw new Error('User is already Admin')
+
+    user.hasAdminApplication = true
+    await user.save()
+
+    const token = createJWT(user)
+    res.status(200).json({ token })
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
+
 function handleAuthError (error, res) {
   console.log(error);
   const { message } = error
-  if (message === 'User not found' || message === 'Incorrect Password') {
+  if (message === 'User not found' || message === 'Incorrect Password' || message === 'User is already Admin') {
     res.status(401).json({ error: message })
   } else {
     res.status(500).json({ error: message })
@@ -83,4 +99,5 @@ export {
   signup,
   login,
   changePassword,
+  adminApplication,
 }

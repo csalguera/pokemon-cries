@@ -16,6 +16,14 @@ const userSchema = new Schema ({
     type: Schema.Types.ObjectId,
     ref: 'Profile',
   },
+  hasAdminApplication: {
+    type: Boolean,
+    default: false,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 userSchema.set('toJSON', {
