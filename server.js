@@ -12,7 +12,6 @@ import { router as authRouter } from './routes/auth.js'
 import { router as profilesRouter } from './routes/profiles.js'
 
 const app = express()
-const portNum = 3001
 
 app.use(cors())
 app.use(express.json())
@@ -22,6 +21,4 @@ app.use('/api/cries', criesRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/profiles', profilesRouter)
 
-app.listen(portNum, () => {
-  console.log(`Listening on port ${portNum}`);
-})
+export { app }
