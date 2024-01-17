@@ -1,4 +1,4 @@
-import { Jwt } from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
 
 import { User } from "../models/user.js";
 import { Profile } from "../models/profile.js";
@@ -63,4 +63,24 @@ const changePassword = async (req, res) => {
   } catch (error) {
     handleAuthError(error, res)
   }
+}
+
+const handleAuthError = (error, res) => {
+  console.log(error);
+  const { message } = error
+  if (message === 'User not found' || message === 'Incorrect Password') {
+    res.status(401).json({ error: message })
+  } else {
+    res.status(500).json({ error: message })
+  }
+}
+
+const createJWT = (user) => {
+  return jwt.sign({ user }), process.env.SECRET, { expiresIn: '24h' }
+}
+
+export {
+  signup,
+  login,
+  changePassword,
 }
