@@ -12,7 +12,9 @@ const router = Router()
 // private routes
 router.use(decodeUserFromToken)
 router.post('/apply', checkAuth, adminsCtrl.apply)
+router.get('/', checkForAdmin, adminsCtrl.index)
 router.get('/applications', checkForAdmin, adminsCtrl.filter)
 router.post('/confirm/:id', checkForAdmin, adminsCtrl.confirm)
+router.post('/deny/:id', checkForAdmin, adminsCtrl.deny)
 
 export { router }

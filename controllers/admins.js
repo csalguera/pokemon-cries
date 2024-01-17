@@ -31,6 +31,15 @@ const apply = async (req, res) => {
   }
 }
 
+const index = async (req, res) => {
+  try {
+    const admins = await User.find({ isAdmin: true })
+    res.status(200).json(admins)
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
+
 const filter = async (req, res) => {
   try {
     const users = await User.find({ hasAdminApplication: true })
@@ -72,8 +81,38 @@ const confirm = async (req, res) => {
   }
 }
 
+const deny = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+    if (!user) throw new Error('User not found')
+    if (user.isAdmin) throw new Error('Authorization denied')
+    if (!user.hasAdminApplication) throw new Error('User did not apply for Admin')
+
+    user.hasAdminApplication = false
+    user.isAdmin = false
+    await user.save()
+
+    const response = {
+      message: 'Admin privileges denied',
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        hasAdminApplication: user.hasAdminApplication,
+      },
+    }
+
+    res.status(200).json(response)
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
+
 export {
   apply,
+  index,
   filter,
   confirm,
+  deny,
 }
