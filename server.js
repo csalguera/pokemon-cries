@@ -7,7 +7,7 @@ import cors from 'cors'
 import './config/database.js'
 
 // routes
-import { router as cryRouter } from './routes/cry.js'
+import { router as criesRouter } from './routes/cries.js'
 import { router as authRouter } from './routes/auth.js'
 import { router as profilesRouter } from './routes/profiles.js'
 
@@ -18,7 +18,7 @@ app.use(cors())
 app.use(express.json())
 
 // mount routes
-app.use('/api/cries', cryRouter)
+app.use('/api/cries', criesRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/profiles', profilesRouter)
 
