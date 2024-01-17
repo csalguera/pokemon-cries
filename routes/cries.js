@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 // controllers
-import * as cryCtrl from "../controllers/cry.js";
+import * as cryCtrl from "../controllers/cries.js";
 
 // middleware
 import { uploadFile } from "../middleware/middleware.js";
