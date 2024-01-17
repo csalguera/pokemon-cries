@@ -1,5 +1,7 @@
+// npm modules
 import jwt from 'jsonwebtoken'
 
+// models
 import { User } from "../models/user.js";
 import { Profile } from "../models/profile.js";
 
@@ -85,7 +87,11 @@ const apply = async (req, res) => {
 const indexApplications = async (req, res) => {
   try {
     const users = await User.find({ hasAdminApplication: true })
-    res.status(200).json(users)
+    if (users.length) {
+      res.status(200).json(users)
+    } else {
+      res.status(200).json({ msg: 'No applications found' })
+    }
   } catch (error) {
     handleAuthError(error, res)
   }

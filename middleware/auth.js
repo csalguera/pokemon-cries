@@ -1,5 +1,7 @@
+// npm modules
 import jwt from 'jsonwebtoken'
 
+// environment variables
 const SECRET = process.env.SECRET
 
 const decodeUserFromToken = (req, res, next) => {
@@ -23,4 +25,8 @@ const checkForAdmin = (req, res, next) => {
   return req.user.isAdmin ? next() : res.status(401).json({ error: 'Not Authorized' })
 }
 
-export { decodeUserFromToken, checkAuth, checkForAdmin }
+export {
+  decodeUserFromToken,
+  checkAuth,
+  checkForAdmin,
+}

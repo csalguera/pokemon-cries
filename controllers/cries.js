@@ -110,7 +110,11 @@ const show = async (req, res) => {
 const filter = async (req, res) => {
   try {
     const cries = await Cry.find({ generation: req.params.gen })
-    return res.status(200).json(cries)
+    if (cries.length) {
+      return res.status(200).json(cries)
+    } else {
+      return res.status(200).json({ msg: 'No resources found' })
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: 'Internal Server Error' })

@@ -1,3 +1,4 @@
+// models
 import { Profile } from "../models/profile.js";
 
 const index = async (req, res) => {

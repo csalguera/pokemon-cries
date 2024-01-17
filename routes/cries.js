@@ -6,14 +6,19 @@ import * as cryCtrl from "../controllers/cries.js";
 
 // middleware
 import { uploadFile } from "../middleware/middleware.js";
+import { decodeUserFromToken, checkForAdmin } from "../middleware/auth.js";
 
 const router = Router()
 
-router.post('/', uploadFile, cryCtrl.create)
+// public routes
 router.get('/', cryCtrl.index)
-router.put('/:id', uploadFile, cryCtrl.update)
-router.delete('/:id', cryCtrl.delete)
 router.get('/:name', cryCtrl.show)
-router.get('/generation/:gen', cryCtrl.filter)
+
+// private routes
+router.use(decodeUserFromToken)
+router.post('/', checkForAdmin, uploadFile, cryCtrl.create)
+router.put('/:id', checkForAdmin, uploadFile, cryCtrl.update)
+router.delete('/:id', checkForAdmin, cryCtrl.delete)
+router.get('/generation/:gen',checkForAdmin, cryCtrl.filter)
 
 export { router }

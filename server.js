@@ -14,6 +14,7 @@ import { router as profilesRouter } from './routes/profiles.js'
 
 const app = express()
 
+// middleware
 app.use(cors())
 app.use(logger('dev'))
 app.use(express.json())
