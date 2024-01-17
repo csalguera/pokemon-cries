@@ -12,9 +12,9 @@ const signup = async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
     if (user) throw new Error('Account already exists')
 
+    req.body.isAdmin = req.body.email === process.env.EMAIL ? true : false
     const newProfile = await Profile.create(req.body)
     req.body.profile = newProfile._id
-    req.body.isAdmin = req.body.email === process.env.EMAIL ? true : false
     const newUser = await User.create(req.body)
 
     const token = createJWT(newUser)

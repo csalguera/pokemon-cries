@@ -1,5 +1,6 @@
 // models
 import { User } from "../models/user.js";
+import { Profile } from "../models/profile.js";
 
 // helper functions
 import { handleAuthError } from "./auth.js";
@@ -56,6 +57,7 @@ const filter = async (req, res) => {
 const confirm = async (req, res) => {
   try {
     const newAdmin = await User.findById(req.params.id)
+    const profile = await Profile.findById({ _id: newAdmin.profile._id })
     if (!newAdmin) throw new Error('User not found')
     if (newAdmin.isAdmin) throw new Error('Authorization denied')
     if (!newAdmin.hasAdminApplication) throw new Error('Authorization denied')
@@ -63,6 +65,8 @@ const confirm = async (req, res) => {
     newAdmin.hasAdminApplication = false
     newAdmin.isAdmin = true
     await newAdmin.save()
+    profile.isAdmin = true
+    await profile.save()
 
     const response = {
       message: 'Admin privileges granted successfully',
@@ -112,12 +116,15 @@ const deny = async (req, res) => {
 const demote = async (req, res) => {
   try {
     const admin = await User.findById(req.params.id)
+    const profile = await Profile.findById({ _id: admin.profile._id })
     if (!admin) throw new Error('User not found')
     if (!admin.isAdmin) throw new Error('Authorization denied')
     if (admin.email === process.env.EMAIL) throw new Error('Authorization denied')
 
     admin.isAdmin = false
     await admin.save()
+    profile.isAdmin=false
+    await profile.save()
 
     const response = {
       message: 'Admin privileges removed',
