@@ -46,3 +46,21 @@ const login = async (req, res) => {
     handleAuthError(error, res)
   }
 }
+
+const changePassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+    if (!user) throw new Error('User not found')
+
+    const isMatch = user.comparePassword(req.body.passowrd)
+    if (!isMatch) throw new Error('Incorrect Password')
+
+    user.password = req.body.newPassword
+    await user.save()
+
+    const token = createJWT(user)
+    res.status(200).json({ token })
+  } catch (error) {
+    handleAuthError(error, res)
+  }
+}
